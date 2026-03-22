@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="Upload a skin image and get AI-powered risk analysis with Grad-CAM heatmaps from DermaAI." />
+    <title>Analyze — DermaAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/analyze.css" />
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a class="nav-logo" href="/">
+                <span>🧬</span><span>DermaAI</span>
+            </a>
+            <a href="/" class="btn-back">← Back to Home</a>
+        </div>
+    </nav>
+
+    <main class="main">
+
+        <!-- ── UPLOAD SECTION ───────────────────────────────── -->
+        <section class="upload-section" id="upload-section">
+            <div class="orb orb-a"></div>
+            <div class="orb orb-b"></div>
+
+            <div class="upload-container">
+                <div class="upload-header">
+                    <h1>Skin Risk <span class="gradient-text">Analysis</span></h1>
+                    <p>Upload a clear photo of the skin area you want analyzed. Supports JPG, PNG, WEBP (max 10 MB).</p>
+                </div>
+
+                <div class="upload-card glass" id="drop-zone">
+                    <input type="file" id="file-input" accept="image/png,image/jpeg,image/jpg,image/webp,image/bmp"
+                        hidden />
+
+                    <div class="drop-content" id="drop-content">
+                        <div class="drop-icon-wrap">
+                            <div class="drop-icon">📂</div>
+                            <div class="drop-ring"></div>
+                        </div>
+                        <h3>Drop your image here</h3>
+                        <p>or <button class="link-btn" id="browse-btn">browse files</button></p>
+                        <span class="drop-formats">PNG · JPG · WEBP · BMP — Max 10 MB</span>
+                    </div>
+
+                    <div class="preview-content hidden" id="preview-content">
+                        <img id="preview-img" src="" alt="Preview" />
+                        <div class="preview-actions">
+                            <span id="preview-name" class="preview-name"></span>
+                            <button class="btn-ghost-sm" id="change-btn">Change image</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-analyze" id="analyze-btn" disabled>
+                    <span id="analyze-label">Select an image first</span>
+                    <span id="analyze-spinner" class="spinner hidden"></span>
+                </button>
+
+                <div class="error-box hidden" id="error-box">
+                    <span>⚠️</span>
+                    <span id="error-msg"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── RESULTS SECTION ──────────────────────────────── -->
+        <section class="results-section hidden" id="results-section">
+
+            <!-- Risk Banner -->
+            <div class="risk-banner" id="risk-banner">
+                <div class="risk-banner-inner">
+                    <div class="risk-label-wrap">
+                        <span class="risk-icon" id="risk-icon">🟢</span>
+                        <div>
+                            <div class="risk-super">Risk Classification</div>
+                            <div class="risk-level-text" id="risk-level-text">Low</div>
+                        </div>
+                    </div>
+                    <div class="confidence-wrap">
+                        <div class="conf-label">
+                            <span>Model Confidence</span>
+                            <span class="conf-pct" id="conf-pct">0%</span>
+                        </div>
+                        <div class="conf-track">
+                            <div class="conf-fill" id="conf-fill"></div>
+                        </div>
+                    </div>
+                    <div class="risk-action-text" id="risk-action"></div>
+                </div>
+            </div>
+
+            <!-- Image comparison -->
+            <div class="images-row container">
+                <div class="img-panel glass">
+                    <div class="img-panel-label">Original Image</div>
+                    <img id="orig-img" src="" alt="Original skin image" />
+                </div>
+                <div class="img-panel-divider">
+                    <div class="vs-badge">Grad-CAM →</div>
+                </div>
+                <div class="img-panel glass">
+                    <div class="img-panel-label">Grad-CAM Heatmap</div>
+                    <img id="heat-img" src="" alt="Grad-CAM heatmap" />
+                    <div class="heat-legend">
+                        <div class="heat-grad"></div>
+                        <div class="heat-labels"><span>Low risk</span><span>High risk</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Analysis -->
+            <div class="section-block container">
+                <div class="section-block-header">
+                    <div>
+                        <h2>📋 Detailed Analysis</h2>
+                        <p>Complete readout of the AI scan results.</p>
+                    </div>
+                </div>
+                <div class="analysis-readout glass">
+                    <div class="readout-row"><span class="r-label">True Label</span><span class="r-colon">:</span><span
+                            class="r-val" id="ro-true-label">...</span></div>
+                    <div class="readout-row"><span class="r-label">Prediction</span><span class="r-colon">:</span><span
+                            class="r-val" id="ro-prediction">...</span></div>
+                    <div class="readout-row"><span class="r-label">Confidence</span><span class="r-colon">:</span><span
+                            class="r-val" id="ro-confidence">...</span></div>
+                    <div class="readout-row"><span class="r-label">Urgency</span><span class="r-colon">:</span><span
+                            class="r-val" id="ro-urgency">...</span></div>
+                    <div class="readout-row"><span class="r-label">Message</span><span class="r-colon">:</span><span
+                            class="r-val" id="ro-message">...</span></div>
+                    <div class="readout-row"><span class="r-label">Advice</span><span class="r-colon">:</span><span
+                            class="r-val" id="ro-advice">...</span></div>
+                </div>
+            </div>
+
+            <!-- Dermatologists Section -->
+            <div class="section-block container">
+                <div class="section-block-header">
+                    <div>
+                        <h2>📍 Find Nearby Dermatologists</h2>
+                        <p>Certified skin specialists available near you for a professional consultation.</p>
+                    </div>
+                </div>
+
+                <div class="derm-google-card glass">
+                    <div class="derm-google-info">
+                        <div class="derm-google-icon">🗺️</div>
+                        <div>
+                            <h3>Search on Google Maps</h3>
+                            <p>Find the best-rated dermatologists instantly. We'll open a pre-filled Google Maps search
+                                for specialists in your area.</p>
+                        </div>
+                    </div>
+                    <a href="https://www.google.com/maps/search/Dermatologist+near+me/" target="_blank"
+                        rel="noopener noreferrer" class="btn-primary" style="text-decoration: none;">
+                        Find Dermatologists Nearby ↗
+                    </a>
+                </div>
+            </div>
+
+            <!-- PDF Report -->
+            <div class="section-block container report-section">
+                <div class="report-card glass">
+                    <div class="report-info">
+                        <div class="report-icon">📄</div>
+                        <div>
+                            <h3>Download Analysis Report</h3>
+                            <p>Get a professional PDF summary with your risk result, heatmap, and analysis notes —
+                                shareable with your doctor.</p>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="download-btn">
+                        <span id="dl-label">Download PDF Report</span>
+                        <span id="dl-spinner" class="spinner hidden"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="container">
+                <div class="disclaimer glass">
+                    ⚠️ <strong>Medical Disclaimer:</strong> DermaAI is an AI-assisted screening tool for informational
+                    purposes only.
+                    It is <strong>not</strong> a substitute for professional medical diagnosis.
+                    Always consult a certified dermatologist for clinical evaluation.
+                </div>
+            </div>
+
+            <!-- New analysis -->
+            <div class="container new-analysis-wrap">
+                <button class="btn-ghost" id="new-analysis-btn">← Analyze another image</button>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/upload.js"></script>
+    <script src="js/analyze.js"></script>
+</body>
+
+</html>

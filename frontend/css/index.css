@@ -1,0 +1,739 @@
+/* ═══════════════════════════════════════════════════════════
+   DermaAI — Landing Page CSS
+   Healthcare · Green & White · Premium Medical Feel
+═══════════════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Core Healthcare Palette */
+  --bg: #f0f7f4;
+  --bg2: #e8f5ee;
+  --white: #ffffff;
+  --surface: rgba(255, 255, 255, 0.85);
+  --surface-solid: #ffffff;
+
+  /* Greens */
+  --green-900: #14532d;
+  --green-700: #15803d;
+  --green-600: #16a34a;
+  --green-500: #22c55e;
+  --green-400: #4ade80;
+  --green-200: #bbf7d0;
+  --green-100: #dcfce7;
+  --green-50: #f0fdf4;
+  --teal: #0d9488;
+  --teal-light: #99f6e4;
+
+  /* Accents */
+  --amber: #d97706;
+  --red: #dc2626;
+  --red-light: #fee2e2;
+
+  /* Text */
+  --text: #0f2318;
+  --text-mid: #2d6a4f;
+  --text-dim: #6b7280;
+  --text-muted: #9ca3af;
+
+  /* Borders */
+  --border: rgba(22, 163, 74, 0.18);
+  --border-soft: rgba(22, 163, 74, 0.10);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 16px rgba(21, 128, 61, 0.10), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 40px rgba(21, 128, 61, 0.14), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-glow: 0 0 40px rgba(34, 197, 94, 0.18);
+
+  --radius: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Utilities ─────────────────────────────────────────── */
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--green-600) 0%, var(--teal) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Background Orbs ────────────────────────────────────── */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.orb-1 {
+  width: 560px;
+  height: 560px;
+  background: rgba(34, 197, 94, 0.14);
+  top: -140px;
+  left: -200px;
+}
+
+.orb-2 {
+  width: 420px;
+  height: 420px;
+  background: rgba(13, 148, 136, 0.10);
+  top: 80px;
+  right: -100px;
+}
+
+.orb-3 {
+  width: 320px;
+  height: 320px;
+  background: rgba(74, 222, 128, 0.10);
+  bottom: 60px;
+  left: 35%;
+}
+
+.orb-4 {
+  width: 500px;
+  height: 500px;
+  background: rgba(34, 197, 94, 0.10);
+  top: 0;
+  right: 0;
+}
+
+/* ── NAV ───────────────────────────────────────────────── */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 18px 0;
+  transition: all 0.3s ease;
+}
+
+.nav.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-sm);
+  padding: 14px 0;
+}
+
+.nav-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--green-700);
+}
+
+.logo-icon {
+  font-size: 1.4rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--green-600);
+}
+
+/* ── Buttons ───────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--green-600) 0%, var(--teal) 100%);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+  cursor: pointer;
+  padding: 11px 22px;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.30);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(22, 163, 74, 0.40);
+}
+
+.btn-lg {
+  padding: 14px 32px;
+  font-size: 1rem;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--green-700);
+  font-weight: 600;
+  font-size: 1rem;
+  background: transparent;
+  border: 1.5px solid var(--green-500);
+  border-radius: 50px;
+  text-decoration: none;
+  padding: 14px 30px;
+  transition: all 0.2s;
+}
+
+.btn-ghost:hover {
+  background: var(--green-50);
+  border-color: var(--green-600);
+  color: var(--green-700);
+}
+
+.nav-cta {
+  padding: 10px 22px;
+  font-size: 0.88rem;
+}
+
+/* ── HERO ──────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 40px;
+  padding: 130px 80px 80px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #f0fdf4 0%, #e8f5ee 40%, #d1fae5 100%);
+}
+
+.hero-bg-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(22, 163, 74, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22, 163, 74, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--green-100);
+  border: 1px solid var(--green-200);
+  border-radius: 50px;
+  padding: 8px 18px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--green-700);
+  margin-bottom: 28px;
+  letter-spacing: 0.03em;
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green-500);
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+}
+
+.hero-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.6rem, 4vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 22px;
+  color: var(--text);
+}
+
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  max-width: 500px;
+  margin-bottom: 36px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 52px;
+}
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 24px;
+  width: fit-content;
+  box-shadow: var(--shadow-md);
+}
+
+.stat {
+  text-align: center;
+  padding: 0 20px;
+}
+
+.stat-num {
+  display: block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--green-600);
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.stat-divider {
+  width: 1px;
+  height: 36px;
+  background: var(--border);
+}
+
+/* ── Hero Spline ────────────────────────────────────────── */
+.hero-spline {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 640px;
+  /* Use clip-path to crop ONLY the bottom edge to hide the watermark 
+     while allowing the giant left arm to bleed out of the box */
+  clip-path: inset(-100% -100% 0 -100%);
+}
+
+.hero-spline spline-viewer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  /* Make height taller than container so the bottom right watermark is clipped off */
+  height: calc(100% + 90px);
+
+  /* Make the image significantly bigger and shift it to the right */
+  transform: scale(1.45) translate(18%, 2%);
+  transform-origin: center right;
+
+  /* Fallback CSS hiding */
+  --spline-viewer-logo-display: none;
+}
+
+/* Primary way to hide the Spline logo shadow DOM part on free plan */
+spline-viewer::part(logo) {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ── Features ───────────────────────────────────────────── */
+.features {
+  padding: 100px 0;
+  position: relative;
+  background: var(--white);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.section-tag {
+  display: inline-block;
+  background: var(--green-100);
+  border: 1px solid var(--green-200);
+  color: var(--green-700);
+  border-radius: 50px;
+  padding: 5px 18px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+
+.section-header h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.section-header p {
+  color: var(--text-dim);
+  font-size: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.feature-card {
+  background: var(--white);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 28px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s, border-color 0.3s;
+  box-shadow: var(--shadow-sm);
+}
+
+.feature-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--green-200);
+}
+
+.feature-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 18px;
+}
+
+.feature-icon-wrap.green {
+  background: var(--green-100);
+}
+
+.feature-icon-wrap.cyan {
+  background: rgba(13, 148, 136, 0.10);
+}
+
+.feature-icon-wrap.amber {
+  background: rgba(217, 119, 6, 0.10);
+}
+
+.feature-icon-wrap.blue {
+  background: rgba(59, 130, 246, 0.10);
+}
+
+.feature-icon-wrap.purple {
+  background: rgba(139, 92, 246, 0.10);
+}
+
+.feature-icon-wrap.rose {
+  background: rgba(244, 63, 94, 0.10);
+}
+
+.feature-card h3 {
+  font-size: 1.02rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.feature-card p {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+/* ── How it works ───────────────────────────────────────── */
+.how-it-works {
+  padding: 100px 0;
+  background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+}
+
+.step-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--green-600);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.step-content {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s, transform 0.5s;
+  box-shadow: var(--shadow-md);
+}
+
+.step-content.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.step-icon {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+}
+
+.step-content h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.step-content p {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+.step-arrow {
+  font-size: 1.5rem;
+  color: var(--green-400);
+  padding: 16px 0;
+  animation: bounce-arrow 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce-arrow {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+/* ── CTA Banner ─────────────────────────────────────────── */
+.cta-banner {
+  padding: 100px 0;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--green-700) 0%, var(--teal) 100%);
+}
+
+.cta-banner .orb-4 {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cta-glass {
+  border-radius: var(--radius-xl);
+  padding: 64px 40px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+}
+
+.cta-glass h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.cta-glass p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 32px;
+}
+
+.cta-banner .btn-primary {
+  background: #ffffff;
+  color: var(--green-700);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.cta-banner .btn-primary:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.20);
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+.footer {
+  border-top: 1px solid var(--border-soft);
+  padding: 44px 0;
+  background: var(--white);
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--green-700);
+}
+
+.footer-name {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.footer-disclaimer {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  max-width: 540px;
+  text-align: center;
+  line-height: 1.6;
+  background: var(--green-50);
+  border: 1px solid var(--green-100);
+  border-radius: var(--radius);
+  padding: 12px 20px;
+}
+
+.footer-copy {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 110px 32px 60px;
+    text-align: center;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-stats {
+    margin: 0 auto;
+  }
+
+  .hero-spline {
+    display: none;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding: 100px 20px 50px;
+  }
+
+  .cta-glass {
+    padding: 40px 20px;
+  }
+}

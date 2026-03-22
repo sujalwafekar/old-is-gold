@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="DermaAI — AI-powered skin risk detection with explainable Grad-CAM heatmaps. Upload a skin image and get instant risk assessment." />
+  <title>DermaAI — AI Skin Risk Detection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/index.css" />
+  <script type="module" src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js"></script>
+</head>
+
+<body>
+
+  <!-- ── NAV ─────────────────────────────────────────────────── -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="/">
+        <span class="logo-icon">🧬</span>
+        <span>DermaAI</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="analyze.html" class="btn-primary nav-cta">Analyze Skin ↗</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── HERO ─────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        AI-Powered · Real-Time · Explainable
+      </div>
+
+      <h1 class="hero-title">
+        Early Skin Risk<br />
+        <span class="gradient-text">Detection with AI</span>
+      </h1>
+
+      <p class="hero-sub">
+        Upload a skin image and get instant risk classification,
+        explainable Grad-CAM heatmaps, and nearby dermatologist
+        recommendations — in seconds.
+      </p>
+
+      <div class="hero-actions">
+        <a href="analyze.html" class="btn-primary btn-lg" id="hero-cta">
+          <span>Analyze Your Skin</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+        <a href="#how-it-works" class="btn-ghost btn-lg">See how it works</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">99.2%</span>
+          <span class="stat-label">Uptime</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">&lt;3s</span>
+          <span class="stat-label">Analysis time</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">Grad-CAM</span>
+          <span class="stat-label">Explainability</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">3-Tier</span>
+          <span class="stat-label">Risk Classification</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D Spline Scene -->
+    <div class="hero-spline">
+      <spline-viewer url="https://prod.spline.design/Fvy9rAFZJ0ObmGuN/scene.splinecode" background="transparent"
+        logo="none" events-target="global">
+      </spline-viewer>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ──────────────────────────────────────────────── -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Why DermaAI</span>
+        <h2>Built for clarity & action</h2>
+        <p>Not just another detector — DermaAI tells you <em>what</em> it found, <em>where</em> it found it, and
+          <em>what to do</em> next.
+        </p>
+      </div>
+
+      <div class="features-grid">
+
+        <div class="feature-card glass" data-delay="0">
+          <div class="feature-icon-wrap green">
+            <span>🔬</span>
+          </div>
+          <h3>Deep Learning Detection</h3>
+          <p>EfficientNet-B0 model trained on skin imagery classifies risk into <strong>Low</strong>,
+            <strong>Medium</strong>, and <strong>High</strong> tiers with confidence scores.
+          </p>
+        </div>
+
+        <div class="feature-card glass" data-delay="100">
+          <div class="feature-icon-wrap cyan">
+            <span>🗺️</span>
+          </div>
+          <h3>Grad-CAM Explainability</h3>
+          <p>Visual heatmaps overlay suspicious regions directly on your image — you see exactly <em>why</em> the model
+            flagged a risk area.</p>
+        </div>
+
+        <div class="feature-card glass" data-delay="200">
+          <div class="feature-icon-wrap amber">
+            <span>📊</span>
+          </div>
+          <h3>Risk Classification</h3>
+          <p>Clear, color-coded risk badges with animated confidence bars help you understand the severity at a glance.
+          </p>
+        </div>
+
+        <div class="feature-card glass" data-delay="300">
+          <div class="feature-icon-wrap blue">
+            <span>📍</span>
+          </div>
+          <h3>Find Nearby Dermatologists</h3>
+          <p>Instantly view certified dermatologists near you with ratings, distance, and contact info to book a
+            consultation.</p>
+        </div>
+
+        <div class="feature-card glass" data-delay="400">
+          <div class="feature-icon-wrap purple">
+            <span>📄</span>
+          </div>
+          <h3>Downloadable PDF Report</h3>
+          <p>Generate a professional PDF summary with your risk result, heatmap, and analysis notes — shareable with
+            your doctor.</p>
+        </div>
+
+        <div class="feature-card glass" data-delay="500">
+          <div class="feature-icon-wrap rose">
+            <span>⚡</span>
+          </div>
+          <h3>Real-Time & Lightweight</h3>
+          <p>Analysis completes in under 3 seconds. No cloud uploads to third parties — your image is processed locally
+            and never stored.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ──────────────────────────────────────────── -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Simple Process</span>
+        <h2>Three steps to insight</h2>
+        <p>From upload to actionable results in under a minute.</p>
+      </div>
+
+      <div class="steps">
+
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-content glass">
+            <div class="step-icon">📸</div>
+            <h3>Upload Your Image</h3>
+            <p>Drag and drop or click to select a clear photo of the skin area you want analyzed. Supports JPG, PNG, and
+              WEBP.</p>
+          </div>
+          <div class="step-arrow">↓</div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-content glass">
+            <div class="step-icon">🧠</div>
+            <h3>AI Analysis + Grad-CAM</h3>
+            <p>Our EfficientNet model analyses the image and Grad-CAM highlights exactly which region triggered the risk
+              classification.</p>
+          </div>
+          <div class="step-arrow">↓</div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-content glass">
+            <div class="step-icon">🩺</div>
+            <h3>Act on Results</h3>
+            <p>View your risk score, download a PDF report, and find a dermatologist near you — all in one place.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA BANNER ────────────────────────────────────────────── -->
+  <section class="cta-banner">
+    <div class="orb orb-4"></div>
+    <div class="container">
+      <div class="cta-glass glass">
+        <h2>Ready to get your skin checked?</h2>
+        <p>Free, instant, and private. No account needed.</p>
+        <a href="analyze.html" class="btn-primary btn-lg">
+          Start Analysis
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">🧬</span>
+        <span class="footer-name">DermaAI</span>
+      </div>
+      <p class="footer-disclaimer">
+        DermaAI is for screening and educational purposes only.
+        It does not constitute medical advice or diagnosis.
+        Always consult a certified dermatologist.
+      </p>
+      <p class="footer-copy">© 2025 DermaAI · Built with ❤️ and PyTorch</p>
+    </div>
+  </footer>
+
+  <script>
+    // Navbar scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Feature card entrance animation
+    const cards = document.querySelectorAll('.feature-card, .step-content');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = e.target.dataset.delay || 0;
+          setTimeout(() => e.target.classList.add('visible'), Number(delay));
+        }
+      });
+    }, { threshold: 0.15 });
+    cards.forEach(c => obs.observe(c));
+  </script>
+</body>
+
+</html>
