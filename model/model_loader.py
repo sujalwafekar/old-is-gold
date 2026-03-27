@@ -16,7 +16,6 @@ CLASSES = [
 
 CONF_THRESHOLD = 0.70
 
-# Skin-cancer dataset normalization stats (matches training pipeline)
 MEAN = [0.7216, 0.5765, 0.5725]
 STD  = [0.1404, 0.1501, 0.1669]
 
@@ -25,40 +24,36 @@ PRECAUTIONS = {
         'message': 'No cancer detected. Skin appears normal.',
         'advice' : 'Continue regular skin checks every 3-6 months. Use sunscreen daily.',
         'urgency': 'None',
-        'risk'   : 'Low',
     },
     'Melanoma': {
         'message': 'Melanoma detected. This is the most dangerous type of skin cancer.',
         'advice' : 'Seek immediate dermatologist consultation. Do not delay. Melanoma spreads quickly.',
         'urgency': 'Immediate',
-        'risk'   : 'High',
     },
     'Basal Cell Carcinoma': {
         'message': 'Basal Cell Carcinoma detected. This is the most common skin cancer.',
         'advice' : 'Consult a dermatologist soon. BCC rarely spreads but needs prompt treatment.',
         'urgency': 'Within 1 month',
-        'risk'   : 'Medium',
     },
     'Actinic Keratosis': {
         'message': 'Actinic Keratosis detected. This is a precancerous lesion.',
         'advice' : 'See a dermatologist. AK can develop into SCC if left untreated. Avoid sun exposure.',
         'urgency': 'Within 2 weeks',
-        'risk'   : 'Medium',
     },
     'Squamous Cell Carcinoma': {
         'message': 'Squamous Cell Carcinoma detected. This is a serious skin cancer.',
         'advice' : 'Urgent dermatologist visit needed. SCC can spread to lymph nodes if untreated.',
         'urgency': 'Urgent',
-        'risk'   : 'High',
     },
 }
 
 # ── Model Architecture ─────────────────────────────────────────────────────────
 
 def build_model(num_classes: int = 5) -> nn.Module:
-    """Build DenseNet121 with custom classification head — matches training."""
-    model = models.densenet121(weights=None)
+    """Build DenseNet121 with custom classification head — same as training."""
+    model = models.densenet121(weights=models.DenseNet121_Weights.DEFAULT)
 
+    # Replace classifier with the same head used during training
     in_features = model.classifier.in_features  # 1024
     model.classifier = nn.Sequential(
         nn.Linear(in_features, 512),
@@ -75,81 +70,29 @@ def build_model(num_classes: int = 5) -> nn.Module:
 
 # ── Model Loader ───────────────────────────────────────────────────────────────
 
-def load_model(model_path: str = None) -> nn.Module:
+def load_model(model_path: str = None) -> tuple[nn.Module, torch.device]:
     """
     Load the trained DenseNet121 model from .pth file.
-    Search order:
-      1. Explicit model_path argument (if given)
-      2. backend/model/skin_cancer_densenet_v2.pth  (same dir as this file)
-      3. <project_root>/model/skin_cancer_densenet_v2.pth  (training output dir)
-    Returns model (already in eval mode, on best available device).
+    Returns (model, device).
     """
-    MODEL_FILENAME = 'skin_cancer_densenet_v2_final.pth'
-
     if model_path is None:
-        # Locations to search in priority order
-        base_dir     = os.path.dirname(os.path.abspath(__file__))
-        project_root = os.path.abspath(os.path.join(base_dir, '..', '..'))
-        candidates = [
-            os.path.join(base_dir, MODEL_FILENAME),
-            os.path.join(project_root, 'model', MODEL_FILENAME),
-        ]
-        for candidate in candidates:
-            if os.path.exists(candidate):
-                model_path = candidate
-                break
+        # Default: model file sits next to this script inside model/
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        model_path = os.path.join(base_dir, 'skin_cancer_densenet_v2.pth')
 
-    if model_path is None or not os.path.exists(model_path):
-        raise FileNotFoundError(
-            f"Trained model '{MODEL_FILENAME}' not found. "
-            "Please copy it into backend/model/ or the project-root model/ folder."
-        )
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Model file not found: {model_path}")
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     checkpoint = torch.load(model_path, map_location=device)
 
-    # Determine if it's a full model object or a state_dict
-    if hasattr(checkpoint, 'state_dict'):
-        state_dict = checkpoint.state_dict()
-    elif isinstance(checkpoint, dict) and 'model_state' in checkpoint:
-        state_dict = checkpoint['model_state']
-    else:
-        state_dict = checkpoint
-
     model = build_model(num_classes=len(CLASSES))
-
-    # Auto-fix common prefix mismatches (e.g. from DataParallel or nested models)
-    expected_keys = set(model.state_dict().keys())
-    saved_keys = set(state_dict.keys())
-
-    # Try to find a common prefix in the saved keys that we need to strip
-    new_state_dict = {}
-    for k, v in state_dict.items():
-        new_k = k
-        # Strip DataParallel 'module.' prefix
-        new_k = new_k.replace('module.', '')
-        # Strip common training-wrapper prefixes
-        for prefix in ('backbone.', 'model.', 'densenet.', 'net.', 'encoder.'):
-            if new_k.startswith(prefix) and new_k not in expected_keys:
-                new_k = new_k[len(prefix):]
-                break
-        new_state_dict[new_k] = v
-
-    incompatible = model.load_state_dict(new_state_dict, strict=False)
-    
-    # Let's print the mismatch so we immediately see it in console logs without crashing
-    if incompatible.missing_keys or incompatible.unexpected_keys:
-        print("Model state_dict mismatch detected! (strict=False)")
-        if incompatible.missing_keys:
-            print(f"Missing (first 5): {incompatible.missing_keys[:5]}")
-        if incompatible.unexpected_keys:
-            print(f"Unexpected (first 5): {incompatible.unexpected_keys[:5]}")
-
+    model.load_state_dict(checkpoint['model_state'])
     model.to(device)
     model.eval()
 
-    return model
+    return model, device
 
 # ── Transform ─────────────────────────────────────────────────────────────────
 
@@ -166,34 +109,35 @@ def get_transform() -> transforms.Compose:
 def predict(image: Image.Image, model: nn.Module, device: torch.device) -> dict:
     """
     Run inference on a PIL image.
-    Returns a result dict with prediction, confidence, risk, message, advice, urgency.
-    If confidence < CONF_THRESHOLD, returns an 'Uncertain' response.
+    Returns a result dict with prediction, confidence, message, advice, urgency.
+    If confidence < CONF_THRESHOLD, returns a 'Consult a Doctor' response.
     """
     transform = get_transform()
 
+    # Ensure RGB
     if image.mode != 'RGB':
         image = image.convert('RGB')
 
-    tensor = transform(image).unsqueeze(0).to(device)   # (1, 3, 224, 224)
+    tensor = transform(image).unsqueeze(0).to(device)  # (1, 3, 224, 224)
 
     with torch.no_grad():
-        logits = model(tensor)                           # (1, 5)
-        probs  = torch.softmax(logits, dim=1)[0]         # (5,)
+        logits = model(tensor)                          # (1, 5)
+        probs  = torch.softmax(logits, dim=1)[0]        # (5,)
 
     confidence, class_idx = probs.max(dim=0)
     confidence  = round(confidence.item(), 4)
     class_idx   = class_idx.item()
     class_name  = CLASSES[class_idx]
 
-    # All class probabilities (for frontend breakdown display)
+    # All class probabilities (for debugging / frontend display)
     all_probs = {cls: round(probs[i].item(), 4) for i, cls in enumerate(CLASSES)}
 
+    # Confidence threshold check
     if confidence < CONF_THRESHOLD:
         return {
             'prediction'  : 'Uncertain',
             'confidence'  : confidence,
             'all_probs'   : all_probs,
-            'risk_level'  : 'Unknown',
             'urgency'     : 'Consult Doctor',
             'message'     : 'Model is not confident enough to make a prediction.',
             'advice'      : 'Please consult a qualified dermatologist for proper diagnosis.',
@@ -206,7 +150,6 @@ def predict(image: Image.Image, model: nn.Module, device: torch.device) -> dict:
         'prediction'  : class_name,
         'confidence'  : confidence,
         'all_probs'   : all_probs,
-        'risk_level'  : precaution['risk'],
         'urgency'     : precaution['urgency'],
         'message'     : precaution['message'],
         'advice'      : precaution['advice'],

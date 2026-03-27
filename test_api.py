@@ -1,5 +1,9 @@
 import requests
-GEMINI_API_KEY = "AIzaSyAubFZrNoCM72VAE-LcZJ_xMoOBYDqA8dk"
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 
 # Request list of models
 res = requests.get(f"https://generativelanguage.googleapis.com/v1beta/models?key={GEMINI_API_KEY}")

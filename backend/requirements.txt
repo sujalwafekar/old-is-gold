@@ -1,12 +1,24 @@
 --extra-index-url https://download.pytorch.org/whl/cpu
 
+# Core ML (CPU-only torch saves ~1.5GB install time on Render)
+torch>=2.1.0+cpu
+torchvision>=0.16.0+cpu
+
+# Web framework
 flask==3.0.3
 flask-cors==4.0.1
-torch>=2.6.0
-torchvision>=0.21.0
+gunicorn==21.2.0
+
+# Image processing
 Pillow>=10.3.0
 numpy>=1.26.4
 opencv-python-headless>=4.9.0.80
+
+# PDF generation
 fpdf2>=2.7.9
+
+# API calls
 requests
-gunicorn==21.2.0
+
+# Environment
+python-dotenv>=1.0.1

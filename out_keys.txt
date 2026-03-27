@@ -1,0 +1,10 @@
+Loading weights from: e:\projects\major\skin cancer\backend\model\skin_cancer_densenet_v2_final.pth
+Missing keys (in model not in file): 725
+Examples: ['features.denseblock4.denselayer5.conv2.weight', 'features.denseblock3.denselayer20.norm1.num_batches_tracked', 'features.denseblock2.denselayer2.conv2.weight', 'features.norm0.running_var', 'features.denseblock3.denselayer6.norm1.running_mean', 'features.denseblock4.denselayer12.conv1.weight', 'features.denseblock4.denselayer7.norm1.running_var', 'features.denseblock3.denselayer11.norm2.weight', 'features.denseblock3.denselayer9.norm1.weight', 'features.denseblock3.denselayer11.conv1.weight']
+
+Unexpected keys (in file not in model): 725
+Examples: ['backbone.features.denseblock3.denselayer24.norm2.running_mean', 'backbone.features.denseblock4.denselayer12.conv1.weight', 'backbone.features.denseblock1.denselayer3.norm2.weight', 'backbone.features.denseblock3.denselayer11.norm1.running_mean', 'backbone.features.denseblock2.denselayer11.norm1.num_batches_tracked', 'backbone.features.denseblock4.denselayer16.norm1.num_batches_tracked', 'backbone.features.transition3.norm.running_var', 'backbone.features.denseblock3.denselayer6.norm1.running_mean', 'backbone.features.denseblock4.denselayer9.norm1.bias', 'backbone.features.denseblock3.denselayer22.norm2.running_mean']
+
+First unexpected key: backbone.features.denseblock3.denselayer24.norm2.running_mean
+First missing key: features.denseblock4.denselayer5.conv2.weight
+DONE_INSPECTING

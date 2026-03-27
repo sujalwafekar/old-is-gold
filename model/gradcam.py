@@ -9,7 +9,7 @@ import io
 class GradCAM:
     """
     Gradient-weighted Class Activation Mapping for DenseNet121.
-    Hooks into the last dense block (features.denseblock4) to produce a heatmap.
+    Hooks into the last dense block (denseblock4) to produce a heatmap.
     """
 
     def __init__(self, model):
@@ -19,7 +19,7 @@ class GradCAM:
         self._register_hooks()
 
     def _register_hooks(self):
-        # DenseNet121: last convolutional block is features.denseblock4
+        # DenseNet121: last conv block is features.denseblock4
         target_layer = self.model.features.denseblock4
 
         def forward_hook(module, input, output):
@@ -33,7 +33,7 @@ class GradCAM:
 
     def generate(self, input_tensor: torch.Tensor, class_idx: int = None):
         """
-        Returns a raw heatmap (numpy array, float32, values in [0, 1]).
+        Returns a raw heatmap (numpy array).
         input_tensor: (1, 3, 224, 224) normalized tensor with requires_grad=True
         """
         self.model.zero_grad()
@@ -47,17 +47,17 @@ class GradCAM:
         score.backward()
 
         # Pool gradients across spatial dims
-        pooled_grads = self.gradients.mean(dim=[0, 2, 3])   # (C,)
-        activations = self.activations[0]                    # (C, H, W)
+        pooled_grads = self.gradients.mean(dim=[0, 2, 3])  # (C,)
+        activations = self.activations[0]                  # (C, H, W)
 
-        # Weight activation maps by pooled gradients
+        # Weight activation maps
         for i in range(activations.shape[0]):
             activations[i] *= pooled_grads[i]
 
-        heatmap = activations.mean(dim=0).numpy()            # (H, W)
+        heatmap = activations.mean(dim=0).numpy()          # (H, W)
         heatmap = np.maximum(heatmap, 0)
 
-        # Normalize to [0, 1]
+        # Normalize
         if heatmap.max() > 0:
             heatmap /= heatmap.max()
 
@@ -80,10 +80,10 @@ def overlay_heatmap(heatmap: np.ndarray, original_pil: Image.Image) -> str:
     )
     heatmap_color = cv2.cvtColor(heatmap_color, cv2.COLOR_BGR2RGB)
 
-    # Blend original + heatmap
+    # Blend
     blended = cv2.addWeighted(orig_np, 0.55, heatmap_color, 0.45, 0)
 
-    # Draw a circle at heatmap centroid (highest activation spot)
+    # Draw a circle at heatmap centroid
     yx = np.unravel_index(np.argmax(heatmap_resized), heatmap_resized.shape)
     cy, cx = int(yx[0]), int(yx[1])
     cv2.circle(blended, (cx, cy), 18, (255, 255, 255), 2)
