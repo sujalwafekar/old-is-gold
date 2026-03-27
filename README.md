@@ -1,3 +1,13 @@
+---
+title: DermaAi
+emoji: 👁
+colorFrom: blue
+colorTo: pink
+sdk: docker
+app_file: app.py
+pinned: false
+---
+
 # DermaAI 🧬
 
 **AI-powered skin risk detection with Grad-CAM explainability**

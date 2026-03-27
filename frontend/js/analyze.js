@@ -3,7 +3,7 @@
  */
 (() => {
 
-    const API_BASE = '';  // relative — works on localhost and any deployment
+    const API_BASE = 'https://sujal1207-dermaai.hf.space';
 
     const uploadSection  = document.getElementById('upload-section');
     const resultsSection = document.getElementById('results-section');

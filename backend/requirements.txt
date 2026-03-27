@@ -1,8 +1,8 @@
 --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Core ML (CPU-only torch saves ~1.5GB install time on Render)
-torch>=2.1.0+cpu
-torchvision>=0.16.0+cpu
+torch>=2.1.0
+torchvision>=0.16.0
 
 # Web framework
 flask==3.0.3
