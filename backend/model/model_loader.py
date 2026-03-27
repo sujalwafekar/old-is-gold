@@ -218,14 +218,9 @@ def load_model(model_path: str = None) -> nn.Module:
 # ── Transform ─────────────────────────────────────────────────────────────────
 
 def get_transform() -> transforms.Compose:
-    """Preprocessing pipeline — matches validation/test transforms from training.
-    
-    Uses Resize(256) → CenterCrop(224) which is the standard ImageNet-pretrained
-    model validation pipeline. This matches how DenseNet121 was originally trained.
-    """
+    """Preprocessing pipeline — matches validation/test transforms from training."""
     return transforms.Compose([
-        transforms.Resize(256),
-        transforms.CenterCrop(224),
+        transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize(mean=MEAN, std=STD),
     ])
