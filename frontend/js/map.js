@@ -3,7 +3,7 @@
  * Finds nearby doctors using HTML5 Geolocation and OpenStreetMap Overpass API.
  */
 
-const API_BASE = window.API_BASE || 'https://chess-ppm-assessing-judy.trycloudflare.com';
+const API_BASE = window.API_BASE || 'https://sujal1207-dermaai.hf.space';
 
 let leafletMap = null;
 let userMarker = null;
@@ -109,7 +109,7 @@ window.loadDermatologists = async function () {
         dermList.innerHTML = '<div class="derm-loading">Searching local clinical databases...</div>';
         
         // Fetch from OpenStreetMap Overpass API
-        const query = `[out:json][timeout:15];(node["amenity"="doctors"](around:10000,${userLat},${userLng});node["healthcare"="doctor"](around:10000,${userLat},${userLng});node["amenity"="hospital"](around:10000,${userLat},${userLng}););out qt 10;`;
+        const query = `[out:json][timeout:15];(node["amenity"="doctors"](around:3000,${userLat},${userLng});node["healthcare"="doctor"](around:3000,${userLat},${userLng});node["amenity"="hospital"](around:3000,${userLat},${userLng}););out qt 10;`;
         const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
         
         const resp = await fetch(overpassUrl);
