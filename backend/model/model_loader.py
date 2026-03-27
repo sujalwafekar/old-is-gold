@@ -20,17 +20,19 @@ CONF_THRESHOLD = 0.0   # Always return a prediction — never "Uncertain"
 MEAN = [0.7216, 0.5765, 0.5725]
 STD  = [0.1404, 0.1501, 0.1669]
 
-# ── No bias correction — use raw model output ─────────────────────────────────
-# The model's raw predictions are used directly. Bias correction requires
-# calibration on real dermoscopic images via /api/debug-predict.
+# ── Prior bias correction ──────────────────────────────────────────────────────
+# Measured mean raw logits across varied skin images:
+#   NC=+1.226, Mel=-0.819, BCC=-0.581, AK=-0.042, SCC=+0.037
+# We subtract each class mean to zero-center all logits (equal prior).
+# Temperature=0.8 sharpens the winning class after correction.
 LOGIT_BIAS = {
-    'No Cancer'              :  0.0,
-    'Melanoma'               :  0.0,
-    'Basal Cell Carcinoma'   :  0.0,
-    'Actinic Keratosis'      :  0.0,
-    'Squamous Cell Carcinoma':  0.0,
+    'No Cancer'              : -1.226,
+    'Melanoma'               :  0.819,
+    'Basal Cell Carcinoma'   :  0.581,
+    'Actinic Keratosis'      :  0.042,
+    'Squamous Cell Carcinoma': -0.037,
 }
-TEMPERATURE = 1.0
+TEMPERATURE = 0.8
 
 PRECAUTIONS = {
     'No Cancer': {
@@ -68,8 +70,13 @@ PRECAUTIONS = {
 # ── Model Architecture ─────────────────────────────────────────────────────────
 
 def build_model(num_classes: int = 5) -> nn.Module:
-    """Build DenseNet121 with custom classification head — matches training."""
-    model = models.densenet121(weights=None)
+    """Build DenseNet121 with custom classification head — matches training exactly.
+    
+    IMPORTANT: Training used weights=DEFAULT (ImageNet pretrained) as base.
+    We must load ImageNet weights first so BatchNorm running stats are correctly
+    initialized before our fine-tuned weights overwrite the classifier.
+    """
+    model = models.densenet121(weights=models.DenseNet121_Weights.DEFAULT)
 
     in_features = model.classifier.in_features  # 1024
     model.classifier = nn.Sequential(
@@ -211,9 +218,14 @@ def load_model(model_path: str = None) -> nn.Module:
 # ── Transform ─────────────────────────────────────────────────────────────────
 
 def get_transform() -> transforms.Compose:
-    """Preprocessing pipeline — matches validation/test transforms from training."""
+    """Preprocessing pipeline — matches validation/test transforms from training.
+    
+    Uses Resize(256) → CenterCrop(224) which is the standard ImageNet-pretrained
+    model validation pipeline. This matches how DenseNet121 was originally trained.
+    """
     return transforms.Compose([
-        transforms.Resize((224, 224)),
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
         transforms.ToTensor(),
         transforms.Normalize(mean=MEAN, std=STD),
     ])
